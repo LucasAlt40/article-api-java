@@ -28,7 +28,7 @@ public class CommentController {
 
     @GetMapping("/getAllByArticleId/{articleId}")
     public ResponseEntity<List<Comment>> getAllByArticleId(@PathVariable Integer articleId) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(commentService.getAllCommentsByArticle(articleId));
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsByArticle(articleId));
     }
 
     @PostMapping("/{parentCommentId}/reply")

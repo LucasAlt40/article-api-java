@@ -1,21 +1,20 @@
 package direto.grao.articleapi.service;
 
 import direto.grao.articleapi.dto.ArticleDto;
-import direto.grao.articleapi.dto.CommentDto;
 import direto.grao.articleapi.exceptions.BusinessException;
 import direto.grao.articleapi.exceptions.ResourceNotFoundException;
 import direto.grao.articleapi.mapper.ArticleMapper;
 import direto.grao.articleapi.model.Article;
 import direto.grao.articleapi.model.Category;
-import direto.grao.articleapi.model.Comment;
 import direto.grao.articleapi.repository.ArticleRepository;
 import direto.grao.articleapi.repository.CategoryRepository;
 import direto.grao.articleapi.repository.CommentRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -34,7 +33,6 @@ public class ArticleService {
     }
 
 
-    @Transactional
     public Article save(ArticleDto articleDto) {
         Article article = mapper.toEntity(articleDto);
 
@@ -57,6 +55,19 @@ public class ArticleService {
         }
     }
 
+    public Article getArticleById(Integer id) {
+        Optional<Article> article = articleRepository.getArticleById(id);
+
+        if(article.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum Artigo foi encontrado com esse id: " + id);
+        }
+
+        return article.get();
+    }
+
+    public List<Article> getAllArticles() {
+        return articleRepository.findAll();
+    }
 
 
 }

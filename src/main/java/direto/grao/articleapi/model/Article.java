@@ -35,6 +35,7 @@ public class Article implements Serializable {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany
     @JoinTable(
             name = "article_categories",
