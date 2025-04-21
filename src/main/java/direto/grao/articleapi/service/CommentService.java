@@ -13,7 +13,9 @@ import direto.grao.articleapi.repository.CommentRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -45,4 +47,48 @@ public class CommentService {
             throw new BusinessException("Erro ao salvar comentário: dados inválidos", e);
         }
     }
+
+    public List<Comment> getAllCommentsByArticle(Integer articleId) {
+
+        Optional<Article> article = articleRepository.findById(articleId);
+
+        if(article.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum Artigo foi encontrado com esse id");
+        }
+
+        List<Comment> comments = commentRepository.findAllByArticle(article.get());
+
+        if(comments.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum comentário ainda");
+        }
+
+        return comments.stream()
+                .filter(comment -> comment.getParent() == null)
+                .collect(Collectors.toList());
+    }
+
+
+    public Comment replyToComment(Integer parentCommentId, CommentDto commentDto) {
+        Comment parentComment = commentRepository.findById(parentCommentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comentário pai não encontrado com id: " + parentCommentId));
+
+        if (parentComment.getArticle().getId() != commentDto.articleId()) {
+            throw new BusinessException("Comentário pai não pertence ao artigo informado.", new Exception());
+        }
+
+        Article article = articleRepository.findById(commentDto.articleId())
+                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado com id: " + commentDto.articleId()));
+
+        Comment reply = mapper.toEntity(commentDto);
+        reply.setParent(parentComment);
+        reply.setArticle(article);
+
+        try {
+            return commentRepository.save(reply);
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException("Erro ao salvar resposta do comentário", e);
+        }
+    }
+
+
 }

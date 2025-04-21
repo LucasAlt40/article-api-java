@@ -1,12 +1,19 @@
 package direto.grao.articleapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "Comment")
-public class Comment {
+public class Comment implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,7 +25,17 @@ public class Comment {
     @Column(nullable = false)
     private String author;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> replies;
 }
