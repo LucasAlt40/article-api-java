@@ -31,7 +31,7 @@ public class Article implements Serializable {
 
     private String image;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Column(nullable = false)
