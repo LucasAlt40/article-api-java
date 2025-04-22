@@ -2,6 +2,7 @@ package direto.grao.articleapi.controller;
 
 import direto.grao.articleapi.dto.request.ArticleRequestDto;
 import direto.grao.articleapi.dto.response.ArticleListResponseDto;
+import direto.grao.articleapi.dto.response.ArticleResponseDto;
 import direto.grao.articleapi.model.Article;
 import direto.grao.articleapi.service.ArticleService;
 import jakarta.validation.Valid;
@@ -33,7 +34,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> getArticleById(@PathVariable Integer id) {
+    public ResponseEntity<ArticleResponseDto> getArticleById(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(articleService.getArticleById(id));
     }
 

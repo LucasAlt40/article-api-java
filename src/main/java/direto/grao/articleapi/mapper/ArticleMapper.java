@@ -2,6 +2,7 @@ package direto.grao.articleapi.mapper;
 
 import direto.grao.articleapi.dto.request.ArticleRequestDto;
 import direto.grao.articleapi.dto.response.ArticleListResponseDto;
+import direto.grao.articleapi.dto.response.ArticleResponseDto;
 import direto.grao.articleapi.model.Article;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,4 +13,7 @@ public interface ArticleMapper {
     Article toEntity(ArticleRequestDto dto);
 
     ArticleListResponseDto toListDto(Article article);
+
+    @Mapping(target = "categories", source = "categories")
+    ArticleResponseDto toArticleDto(Article article);
 }

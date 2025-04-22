@@ -1,6 +1,6 @@
 package direto.grao.articleapi.controller;
 
-import direto.grao.articleapi.model.Category;
+import direto.grao.articleapi.dto.response.CategoryResponseDto;
 import direto.grao.articleapi.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
+    public ResponseEntity<List<CategoryResponseDto>> getAllCategories() {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllCategories());
     }
 }

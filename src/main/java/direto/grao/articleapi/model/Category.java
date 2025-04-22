@@ -14,8 +14,10 @@ import java.util.Set;
 @Entity
 @Table(name = "Category")
 public class Category implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;

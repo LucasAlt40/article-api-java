@@ -2,6 +2,7 @@ package direto.grao.articleapi.service;
 
 import direto.grao.articleapi.dto.request.ArticleRequestDto;
 import direto.grao.articleapi.dto.response.ArticleListResponseDto;
+import direto.grao.articleapi.dto.response.ArticleResponseDto;
 import direto.grao.articleapi.exceptions.BusinessException;
 import direto.grao.articleapi.exceptions.ResourceNotFoundException;
 import direto.grao.articleapi.mapper.ArticleMapper;
@@ -58,14 +59,15 @@ public class ArticleService {
         }
     }
 
-    public Article getArticleById(Integer id) {
-        Optional<Article> article = articleRepository.getArticleById(id);
+    public ArticleResponseDto getArticleById(Integer id) {
+        Optional<Article> article = articleRepository.findById(id);
 
         if(article.isEmpty()) {
             throw new ResourceNotFoundException("Nenhum Artigo foi encontrado com esse id: " + id);
         }
 
-        return article.get();
+        return mapper.toArticleDto(article.get());
+
     }
 
     @Transactional
