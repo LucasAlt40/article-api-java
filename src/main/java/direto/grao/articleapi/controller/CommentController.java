@@ -1,6 +1,6 @@
 package direto.grao.articleapi.controller;
 
-import direto.grao.articleapi.dto.CommentDto;
+import direto.grao.articleapi.dto.request.CommentRequestDto;
 import direto.grao.articleapi.model.Comment;
 import direto.grao.articleapi.service.CommentService;
 import jakarta.validation.Valid;
@@ -21,8 +21,8 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comment> addComment(@Valid @RequestBody CommentDto commentDto) {
-        Comment createdComment = commentService.addComment(commentDto);
+    public ResponseEntity<Comment> addComment(@Valid @RequestBody CommentRequestDto commentRequestDto) {
+        Comment createdComment = commentService.addComment(commentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
 
@@ -34,9 +34,9 @@ public class CommentController {
     @PostMapping("/{parentCommentId}/reply")
     public ResponseEntity<Comment> replyToComment(
             @PathVariable Integer parentCommentId,
-            @Valid @RequestBody CommentDto commentDto
+            @Valid @RequestBody CommentRequestDto commentRequestDto
     ) {
-        Comment reply = commentService.replyToComment(parentCommentId, commentDto);
+        Comment reply = commentService.replyToComment(parentCommentId, commentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(reply);
     }
 }

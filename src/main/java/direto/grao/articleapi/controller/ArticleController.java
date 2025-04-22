@@ -1,9 +1,8 @@
 package direto.grao.articleapi.controller;
 
-import direto.grao.articleapi.dto.ArticleDto;
-import direto.grao.articleapi.dto.CommentDto;
+import direto.grao.articleapi.dto.request.ArticleRequestDto;
+import direto.grao.articleapi.dto.response.ArticleListResponseDto;
 import direto.grao.articleapi.model.Article;
-import direto.grao.articleapi.model.Comment;
 import direto.grao.articleapi.service.ArticleService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,13 +22,13 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Article>> getAllArticles() {
+    public ResponseEntity<List<ArticleListResponseDto>> getAllArticles() {
         return  ResponseEntity.status(HttpStatus.OK).body(articleService.getAllArticles());
     }
 
     @PostMapping
-    public ResponseEntity<Article> createArticle(@Valid @RequestBody ArticleDto articleDto) {
-        Article createdArticle = articleService.save(articleDto);
+    public ResponseEntity<Article> createArticle(@Valid @RequestBody ArticleRequestDto articleRequestDto) {
+        Article createdArticle = articleService.save(articleRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdArticle);
     }
 

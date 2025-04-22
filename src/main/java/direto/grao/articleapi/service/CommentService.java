@@ -1,9 +1,8 @@
 package direto.grao.articleapi.service;
 
-import direto.grao.articleapi.dto.CommentDto;
+import direto.grao.articleapi.dto.request.CommentRequestDto;
 import direto.grao.articleapi.exceptions.BusinessException;
 import direto.grao.articleapi.exceptions.ResourceNotFoundException;
-import direto.grao.articleapi.mapper.ArticleMapper;
 import direto.grao.articleapi.mapper.CommentMapper;
 import direto.grao.articleapi.model.Article;
 import direto.grao.articleapi.model.Comment;
@@ -30,10 +29,10 @@ public class CommentService {
         this.mapper = mapper;
     }
 
-    public Comment addComment(CommentDto commentDto) {
-        Comment comment = mapper.toEntity(commentDto);
+    public Comment addComment(CommentRequestDto commentRequestDto) {
+        Comment comment = mapper.toEntity(commentRequestDto);
 
-        Optional<Article> article = articleRepository.findById(commentDto.articleId());
+        Optional<Article> article = articleRepository.findById(commentRequestDto.articleId());
 
         if(article.isEmpty()) {
             throw new ResourceNotFoundException("Nenhum Artigo foi encontrado com esse id");
@@ -68,18 +67,18 @@ public class CommentService {
     }
 
 
-    public Comment replyToComment(Integer parentCommentId, CommentDto commentDto) {
+    public Comment replyToComment(Integer parentCommentId, CommentRequestDto commentRequestDto) {
         Comment parentComment = commentRepository.findById(parentCommentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comentário pai não encontrado com id: " + parentCommentId));
 
-        if (parentComment.getArticle().getId() != commentDto.articleId()) {
+        if (parentComment.getArticle().getId() != commentRequestDto.articleId()) {
             throw new BusinessException("Comentário pai não pertence ao artigo informado.", new Exception());
         }
 
-        Article article = articleRepository.findById(commentDto.articleId())
-                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado com id: " + commentDto.articleId()));
+        Article article = articleRepository.findById(commentRequestDto.articleId())
+                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado com id: " + commentRequestDto.articleId()));
 
-        Comment reply = mapper.toEntity(commentDto);
+        Comment reply = mapper.toEntity(commentRequestDto);
         reply.setParent(parentComment);
         reply.setArticle(article);
 

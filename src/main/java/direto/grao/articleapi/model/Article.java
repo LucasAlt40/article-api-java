@@ -4,15 +4,16 @@ package direto.grao.articleapi.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "Article")
 public class Article implements Serializable {
@@ -26,6 +27,11 @@ public class Article implements Serializable {
     private String title;
 
     @Column(nullable = false)
+    private String resume;
+
+    private String image;
+
+    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
@@ -36,7 +42,7 @@ public class Article implements Serializable {
     private LocalDateTime createdAt;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "article_categories",
             joinColumns = @JoinColumn(name = "article_id"),
