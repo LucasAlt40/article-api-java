@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record ArticleResponseDto(
+        Integer id,
         String title,
         String author,
         String content,

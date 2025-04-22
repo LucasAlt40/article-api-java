@@ -48,23 +48,19 @@ public class CommentService {
     }
 
     public List<Comment> getAllCommentsByArticle(Integer articleId) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nenhum Artigo foi encontrado com esse id"));
 
-        Optional<Article> article = articleRepository.findById(articleId);
+        List<Comment> comments = commentRepository
+                .findAllByArticleAndParentIsNullOrderByCreatedAtDesc(article);
 
-        if(article.isEmpty()) {
-            throw new ResourceNotFoundException("Nenhum Artigo foi encontrado com esse id");
-        }
-
-        List<Comment> comments = commentRepository.findAllByArticle(article.get());
-
-        if(comments.isEmpty()) {
+        if (comments.isEmpty()) {
             throw new ResourceNotFoundException("Nenhum comentário ainda");
         }
 
-        return comments.stream()
-                .filter(comment -> comment.getParent() == null)
-                .collect(Collectors.toList());
+        return comments;
     }
+
 
 
     public Comment replyToComment(Integer parentCommentId, CommentRequestDto commentRequestDto) {

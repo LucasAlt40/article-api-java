@@ -9,4 +9,6 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     List<Comment> findAllByArticle(Article article);
+    List<Comment> findAllByArticleAndParentIsNullOrderByCreatedAtDesc(Article article);
+
 }
