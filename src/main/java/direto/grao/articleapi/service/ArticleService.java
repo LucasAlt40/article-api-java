@@ -59,6 +59,32 @@ public class ArticleService {
         }
     }
 
+    @Transactional
+    public ArticleResponseDto update(Integer id, ArticleRequestDto dto) {
+        // 1) busca o artigo existente
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado com id: " + id));
+
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(dto.categoriesId()));
+        if (categories.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhuma categoria válida encontrada");
+        }
+        if (categories.size() != dto.categoriesId().size()) {
+            throw new ResourceNotFoundException("Algumas categorias não foram encontradas");
+        }
+
+        mapper.toEntity(dto);
+
+        article.setCategories(categories);
+
+        try {
+            Article saved = articleRepository.save(article);
+            return mapper.toArticleDto(saved);
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException("Erro ao atualizar artigo: dados inválidos", e);
+        }
+    }
+
     public ArticleResponseDto getArticleById(Integer id) {
         Optional<Article> article = articleRepository.findById(id);
 

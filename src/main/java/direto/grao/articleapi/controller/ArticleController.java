@@ -38,7 +38,16 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK).body(articleService.getArticleById(id));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ArticleResponseDto> updateArticle(
+            @PathVariable Integer id,
+            @Valid @RequestBody ArticleRequestDto articleRequestDto) {
 
+        ArticleResponseDto updated = articleService.update(id, articleRequestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(updated);
+    }
 
 
 }

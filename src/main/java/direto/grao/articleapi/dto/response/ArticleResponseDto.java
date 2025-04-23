@@ -9,6 +9,7 @@ public record ArticleResponseDto(
         String title,
         String author,
         String content,
+        String resume,
         String image,
         LocalDateTime createdAt,
         List<CategoryResponseDto> categories
